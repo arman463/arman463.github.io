@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main  # یا نام شاخه‌ای که می‌خواهید این Workflow در آن اجرا شود
-
+ 
 jobs:
   run:
     runs-on: ubuntu-latest
