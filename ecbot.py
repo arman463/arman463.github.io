@@ -78,20 +78,24 @@ async def on_message(message: Message):
                if i.user.id == user :
                     admin = True
 
+          if admin == False :
+               message.reply("شما دسترسي نداريد")
+
 
 
 
              
 
     if message.text == "آن میوت کردن" :
-        if not message.chat_id in mutegr :
-             #await bot.delete_message(chat_id=message.chat_id,message_id=message.message_id)
+        if admin == True :
+             if not message.chat_id in mutegr :
+                  #await bot.delete_message(chat_id=message.chat_id,message_id=message.message_id)
              
-             await bot.send_message(message.chat_id,"گروه در حال حاضر ميوت نيست !")
+                  await bot.send_message(message.chat_id,"گروه در حال حاضر ميوت نيست !")
 
-        else :
-             mutegr.remove(message.chat_id)
-             await bot.send_message(message.chat_id,"ارسال پيام آزاد شد !")
+             else :
+                  mutegr.remove(message.chat_id)
+                  await bot.send_message(message.chat_id,"ارسال پيام آزاد شد !")
 
              
 
@@ -151,8 +155,6 @@ async def on_message(message: Message):
               await bot.send_message(chat_id=chatid,text="گروه ميوت شد")
               mutegr.add(message.chat_id)
 
-         else :
-              await bot.send_message(chat_id=chatid,text="دسترسي نداري")
               
               
          
@@ -236,7 +238,13 @@ async def on_message(message: Message):
          await message.reply(skh)
 
     if message.text == "بن":
-         await message.reply(str(message.reply_to_message.chat_id))
+         if admin == True :
+             await bot.ban_chat_member(user_id=message.reply_to_message.chat_id , chat_id=chatid)
+             await message.reply(str("کاربر __*"+message.reply_to_message.chat.first_name+"*__ از گروه حذف شد"))
+
+         
+         
+         
 
     if "ساعت" in message.text and len(message.text) < 20:
          sa=requests.get("https://api.keybit.ir/time/").json()
