@@ -19,6 +19,7 @@ h1{
 
   text-align: center;
   margin:40px;
+  box-sizing:border-box;
 
 }
 h1:hover{
