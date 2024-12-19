@@ -1,19 +1,15 @@
 
-#bluesc{
-  background-color: blue;
-}
-#redsc{
-  background-color: rgb(255,255,0);
-}
+
 #yellowsc{
   background-image:url("368.jpg");
 }
 h1{
-  color:red;
+  color:green;
+  text-shadow:2px 2px black;
+  transition: text-shadow 0.3s ease, transform 0.3s ease, color 0.3s ease; /* انیمیشن برای تغییرات */
 
-
-  padding-top:20px;
-  padding-bottom : 20px;
+  padding-top:40px;
+  padding-bottom : 40px;
   font-size:40px;
 
   border-style:solid dotted;
@@ -25,10 +21,9 @@ h1{
   margin:40px;
 
 }
-p{
-  margin:20px;
-  background-color: rgba(255, 255, 0, 0.5);
-  text-align: center;
-  font-weight:bold;
-  font-size:20px
+h1:hover{
+  
+  text-shadow: 4px 4px 15px rgba(255, 0, 0, 0.7), 0 0 25px rgba(0, 255, 255, 0.5), 0 0 5px rgba(0, 0, 255, 0.5); /* سایه چند رنگ در حالت hover */
+            transform: scale(1.1); /* بزرگ‌تر شدن متن */
+            color: #ffcc00; /* تغییر رنگ متن به زرد */
 }
