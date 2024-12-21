@@ -1,30 +1,44 @@
-
-
-#yellowsc{
-  background-image:url("368.jpg");
+body{
+    background-color: black;
 }
-h1{
-  color:green;
-  text-shadow:2px 2px black;
-  transition: text-shadow 0.3s ease, transform 0.3s ease, color 0.3s ease; /* انیمیشن برای تغییرات */
+.pr{
+    background-attachment: fixed;
+    height: 450px;
+}
 
-  padding-top:40px;
-  padding-bottom : 40px;
-  font-size:40px;
-
-  border-style:solid dotted;
-  border-width:15px 10px;
-  border-color:black red;
-  background-color:rgba(0, 0, 255, 0.5);
-
-  text-align: center;
-  margin:40px;
-  box-sizing:border-box;
+.part{
+    text-align: center;
+    background-color: black;
+    box-sizing: border-box;
+    height:200px;
+    padding-top:60px;
+    font-size: 40px;
+    color:yellow;
 
 }
-h1:hover{
-  
-  text-shadow: 4px 4px 15px rgba(255, 0, 0, 0.7), 0 0 25px rgba(0, 255, 255, 0.5), 0 0 5px rgba(0, 0, 255, 0.5); /* سایه چند رنگ در حالت hover */
-            transform: scale(1.1); /* بزرگ‌تر شدن متن */
-            color: #ffcc00; /* تغییر رنگ متن به زرد */
+.sp{
+    height:50px;
+}
+.txt:hover{
+    color:lime;
+    font-weight: bold;
+    cursor: default;
+}
+
+
+
+
+
+
+
+
+
+.bg1{
+    background-image: url("asm.jpg");
+}
+.bg2{
+    background-image: url("asmd.jpg");
+}
+.bg3{
+    background-image: url("pur.jpg");
 }
