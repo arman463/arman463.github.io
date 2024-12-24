@@ -6,7 +6,7 @@ import requests
 
 
 
-bot=Bot(token="2124438657:VjQf6x3U65uXiYjFv9G8xo4KZggNVL4HV1RhfNKR")
+bot=Bot(token="2124438657:VjQf6x3U65uXiYjFv9G8xo4KZggNVL4HV1RhfNKR") 
 
 
 
