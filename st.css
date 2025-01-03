@@ -59,12 +59,15 @@ body{
     display: inline;
     color:orange;
     font-size:60px;    
+    font-family: Gulzar;
+
 }
 .st1:hover{
     cursor: default;
 }
 .st2:hover{
     color:red;
+    
     cursor: default;
 }
 .screen2{
@@ -113,6 +116,8 @@ body{
     font-weight: bold;
     font-size: 20px;
     display: block;
+    font-family: Gulzar;
+
 }
 .ozvtxt{
     padding:20px;
