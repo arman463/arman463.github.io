@@ -1,0 +1,70 @@
+*{
+    margin:0;
+    padding:0;
+    font-family: "Gulzar";
+
+}
+body{
+    background-color: gray;
+}
+.screen1{
+    text-align:center;
+    height:80vh;
+}
+.screenimg{
+    display:inline-block;
+    background-image: url("kar1imgs/felez2.jpg");
+    height:80vh;
+    width: 98vw;
+    background-blend-mode: multiply;
+    background-color: gray;
+    padding-top : 12vh;
+    box-sizing: border-box;
+    background-attachment: fixed;
+}
+.textimg1{
+    color:white;
+    font-weight:bold;
+    font-size: 8vh;
+}
+.milbox{
+    margin-top:50vh;
+}
+.miltitle{
+    color:black;
+    font-size:10vh;
+    margin-bottom: 10vh;
+    font-weight: bold;
+}
+.mil{
+    height:55vh;
+    width:35vw;
+}
+.sohan{
+    margin-top:20vh;
+}
+.sohanimg{
+    height:60vh;
+    width: 60vw;
+    margin-bottom: 25vh;
+}
+
+.vid{
+    display:inline-block;
+    width: 25vw;
+    height:20vh;
+    background-color: red;
+    transition: background-color 0.3s;
+    margin-bottom: 20vh;
+    text-align: center;
+    font-size: 6vh;
+    padding-top:9vh;
+    color:yellow;
+
+    box-shadow: 0.6vw 1vh black;
+}
+.vid:hover{
+    cursor: pointer;
+    background-color: rgb(183, 43, 43);
+}
+
