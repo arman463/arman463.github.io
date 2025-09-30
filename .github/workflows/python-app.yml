@@ -23,7 +23,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install python-bale-bot requests
+        pip install aiobale requests
 
     - name: Run bot
       run: python ecbot.py
