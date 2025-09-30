@@ -26,4 +26,4 @@ jobs:
         pip install aiobale requests
 
     - name: Run bot
-      run: python ecbot.py
+      run: python selfBale.py
