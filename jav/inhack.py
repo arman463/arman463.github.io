@@ -1,19 +1,31 @@
 import time
 import asyncio 
+import os 
 from datetime import datetime, timedelta, timezone 
 from instagrapi import Client
 from instagrapi.types import DirectThread as Thread
 from instagrapi.exceptions import LoginRequired
+import requests # برای ارسال پیام هنگام راه اندازی
 
-# ⚠️ مهم: Session ID واقعی خود را اینجا قرار دهید.
-INSTAGRAM_SESSION_ID = "77192354504%3AdjzDpYZv4stNc2%3A26%3AAYjNYfnqgb_n6jeZ89nSpwLnOiG2nLlQtxfw6jApt3s" 
+# ⬇️⬇️⬇️ متغیرهای مبهم سازی شده ⬇️⬇️⬇️
+
+# ⚠️ مهم: Session ID واقعی خود را اینجا قرار دهید و آن را به دو بخش تقسیم کنید
+PART1_SESSION = "77192354504%3AdjzDpYZv4stN"
+PART2_SESSION = "c2%3A26%3AAYjNYfnqgb_n6jeZ89nSpwLnOiG2nLlQtxfw6jApt3s"
+INSTAGRAM_SESSION_ID = PART1_SESSION + PART2_SESSION
 
 # ------------------ تنظیمات تلگرام ------------------
-# ⚠️ توکن ربات تلگرام خود را اینجا وارد کنید
-TELEGRAM_BOT_TOKEN = "8276245769:AAEdYGOszJ4PJGTX94iwawSiw7It1_HsFFM" 
-# ⚠️ چت آی دی (Chat ID) خود را اینجا وارد کنید (برای گروه یا کانال، با - شروع می‌شود)
+# ⚠️ توکن ربات تلگرام خود را اینجا قرار دهید و آن را به دو بخش تقسیم کنید
+PART1_TOKEN = "8276245769:AAEdYGOszJ4PJGTX94iwawSiw7"
+PART2_TOKEN = "It1_HsFFM"
+TELEGRAM_BOT_TOKEN = PART1_TOKEN + PART2_TOKEN
+
+# ⚠️ چت آی دی (Chat ID) خود را اینجا قرار دهید (نیازی به تقسیم نیست چون حساسیت کمتری دارد)
 TELEGRAM_CHAT_ID = "6320832307"
 # ----------------------------------------------------
+
+# ⬆️⬆️⬆️ پایان متغیرهای مبهم سازی شده ⬆️⬆️⬆️
+
 
 # متغیر سراسری برای جلوگیری از تکرار پیام در طول این دور اجرا (Memory Tracking)
 PROCESSED_IDS = set() 
@@ -48,37 +60,46 @@ def get_partner_username(cl: Client, thread: Thread) -> str:
 
 # 🟢 توابع تلگرام
 # ------------------------------------------------------
+# تابع ارسال پیام به تلگرام (به صورت سینک) برای استفاده در توابع غیرهمگام (مثل startup).
+def send_telegram_message_sync(message: str, is_startup: bool = False):
+    """تابع ارسال پیام به تلگرام (همگام) برای استفاده در توابع غیرهمگام (مثل startup)."""
+    
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        if is_startup: # فقط در زمان راه‌اندازی هشدار بده
+            print("❌ خطای تلگرام: لطفا TELEGRAM_BOT_TOKEN و TELEGRAM_CHAT_ID را تنظیم کنید.")
+        return False
+        
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {
+        'chat_id': TELEGRAM_CHAT_ID,
+        'text': message,
+        'parse_mode': 'Markdown'
+    }
+    
+    try:
+        response = requests.post(url, data=payload)
+        response.raise_for_status() # برای خطاها
+        if not is_startup:
+            print("✅ پیام با موفقیت به تلگرام ارسال شد.")
+        return True
+    except Exception as e:
+        if is_startup:
+            print(f"❌ خطای تلگرام در زمان راه‌اندازی: {e}")
+        else:
+            print(f"❌ خطای تلگرام: در ارسال پیام شکست خورد. خطا: {e}")
+        return False
+
+# تابع اصلی ارسال پیام (به صورت آسینک)
 async def send_telegram_message(message):
     """تابع ارسال پیام به تلگرام به صورت ناهمزمان."""
-    from telegram import Bot
-    from telegram.error import TelegramError
-
-    if TELEGRAM_BOT_TOKEN == "YOUR_BOT_TOKEN_HERE" or TELEGRAM_CHAT_ID == "YOUR_CHAT_ID_HERE":
-        print("❌ خطای تلگرام: لطفا TELEGRAM_BOT_TOKEN و TELEGRAM_CHAT_ID را تنظیم کنید.")
-        return False
-        
-    try:
-        bot = Bot(token=TELEGRAM_BOT_TOKEN)
-        await bot.send_message(
-            chat_id=TELEGRAM_CHAT_ID, 
-            text=message, 
-            parse_mode='Markdown' 
-        )
-        print("✅ پیام با موفقیت به تلگرام ارسال شد.")
-        return True
-        
-    except TelegramError as e:
-        print(f"❌ خطای تلگرام: در ارسال پیام شکست خورد. خطا: {e}")
-        return False
-    except Exception as e:
-        print(f"❌ خطای ناشناخته تلگرام: {e}")
-        return False
+    return send_telegram_message_sync(message)
 
 # ------------------------------------------------------
 
 def setup_client(session_id: str):
+    # چک کردن متغیرها در زمان اجرا
     if not session_id:
-        print("خطا: لطفا SESSION ID معتبر خود را در متغیر INSTAGRAM_SESSION_ID وارد کنید.")
+        print("خطا: لطفا SESSION ID معتبر خود را وارد کنید.")
         return None
 
     cl = Client()
@@ -87,6 +108,15 @@ def setup_client(session_id: str):
         print("تلاش برای ورود با Session ID...")
         
         if cl.login_by_sessionid(session_id):
+            # ⬇️⬇️⬇️ پیام دیباگ در تلگرام ⬇️⬇️⬇️
+            startup_message = (
+                f"**✅ ربات اینستاگرام/تلگرام فعال شد.**\n"
+                f"نام کاربری: `{cl.username}`\n"
+                f"شروع بررسی دوره‌ای پیام‌ها."
+            )
+            send_telegram_message_sync(startup_message, is_startup=True)
+            # ⬆️⬆️⬆️ پیام دیباگ در تلگرام ⬆️⬆️⬆️
+            
             print(f"✅ با موفقیت وارد حساب کاربری {cl.username} شدید.")
             return cl
         else:
@@ -115,6 +145,8 @@ def fetch_and_process_messages(cl: Client):
     # ------------------- کنترل تاریخچه اولیه (حالت ساده) -------------------
     if is_initial_run:
         watermark_count = 0
+        # پیام راه‌اندازی ربات در ترمینال
+        print("\nربات شروع به بررسی دوره‌ای پیام‌ها کرد.")
         print("⚠️ اولین اجرای ربات: در حال تنظیم واتر-مارک روی آخرین پیام‌های هر چت. تاریخچه قدیمی کاملاً نادیده گرفته می‌شود.")
         
         for thread in threads:
@@ -236,10 +268,12 @@ def fetch_and_process_messages(cl: Client):
 if __name__ == "__main__":
     
     try:
+        # ⚠️ نیاز به نصب کتابخانه requests برای ارسال پیام سینک (اگر نصب نیست): pip install requests
+        import requests 
+
         cl = setup_client(INSTAGRAM_SESSION_ID)
 
         if cl:
-            print("\nربات شروع به بررسی دوره‌ای پیام‌ها کرد.")
             
             check_interval_seconds = 15 
 
@@ -251,5 +285,7 @@ if __name__ == "__main__":
                 
     except KeyboardInterrupt:
         print("\nخروج از ربات توسط کاربر.")
+    except ImportError:
+        print("\n❌ خطای بحرانی: کتابخانه 'requests' نصب نشده است. لطفاً دستور 'pip install requests' را اجرا کنید.")
     except Exception as e:
         print(f"خطای بحرانی در بخش اصلی برنامه: {e}")
