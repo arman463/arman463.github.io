@@ -1,4 +1,0 @@
-# فایل .gitignore
-.env
-__pycache__/
-*.pyc
